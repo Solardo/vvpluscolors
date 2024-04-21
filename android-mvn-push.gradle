@@ -7,31 +7,37 @@ apply plugin: 'signing'
 
 afterEvaluate { project ->
     project.version = android.defaultConfig.versionName
-    project.group = 'com.github.yukuku'
+    project.group = 'com.github.solardo'  // Cambia el nombre de grupo a tu propio grupo
 
     uploadArchives {
         repositories {
             mavenDeployer {
+                // Configura la firma de la biblioteca
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-                pom.artifactId = 'ambilwarna'
+                // Cambia el `artifactId` a tu propio nombre de artefacto
+                pom.artifactId = 'vvpluscolors'
 
+                // Configura el repositorio Maven de destino
                 repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                     authentication(userName: nexusUsername, password: nexusPassword)
                 }
 
+                // Configura los metadatos de tu proyecto
                 pom.project {
-                    name 'AmbilWarna'
+                    name 'VVPlusColors'  // Cambia el nombre de la biblioteca a tu propio nombre
                     packaging 'aar'
-                    description 'Android Color Picker aka AmbilWarna library ("Pick a Color" in Indonesian)'
-                    url 'https://github.com/yukuku/ambilwarna'
+                    description 'Android Color Picker Library'  // Cambia la descripción si es necesario
+                    url 'https://github.com/Solardo/vvpluscolors'  // Cambia la URL a la de tu repositorio
 
+                    // Configura la información de SCM
                     scm {
-                        url 'https://github.com/yukuku/ambilwarna'
-                        connection 'scm:git@github.com:yukuku/ambilwarna.git'
-                        developerConnection 'scm:git@github.com:yukuku/ambilwarna.git'
+                        url 'https://github.com/Solardo/vvpluscolors'
+                        connection 'scm:git@github.com:Solardo/vvpluscolors.git'
+                        developerConnection 'scm:git@github.com:Solardo/vvpluscolors.git'
                     }
 
+                    // Configura la licencia (puedes dejarla como está o cambiarla según tus preferencias)
                     licenses {
                         license {
                             name 'The Apache Software License, Version 2.0'
@@ -40,10 +46,11 @@ afterEvaluate { project ->
                         }
                     }
 
+                    // Configura la información del desarrollador
                     developers {
                         developer {
-                            id 'yukuku'
-                            name 'yukuku'
+                            id 'solardo'  // Cambia este ID a tu propio ID de GitHub
+                            name 'Solardo'  // Cambia este nombre a tu propio nombre
                         }
                     }
                 }
@@ -51,11 +58,13 @@ afterEvaluate { project ->
         }
     }
 
+    // Configura la firma de los artefactos
     signing {
         required { gradle.taskGraph.hasTask("uploadArchives") }
         sign configurations.archives
     }
 
+    // Tareas para generar javadocs y fuentes
     task androidJavadocs(type: Javadoc) {
         source = android.sourceSets.main.java.srcDirs
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
@@ -75,6 +84,7 @@ afterEvaluate { project ->
         from android.sourceSets.main.java.srcDirs
     }
 
+    // Registra los artefactos para su despliegue
     artifacts {
         archives androidSourcesJar
         archives androidJavadocsJar
